@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { ScrollToTop, Header, Footer, Notification } from './components';
+import { Home, User, Master, Task } from './pages';
+import './App.scss';
 
-function App() {
+const App: FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ScrollToTop />
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/master" element={<Master />} />
+          <Route path="/task" element={<Task />} />
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+      </main>
+      <Footer />
+      <Notification />
+    </>
   );
-}
+};
 
 export default App;
