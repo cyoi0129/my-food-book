@@ -10,4 +10,5 @@ export { default as TaskModal } from './TaskModal';
 export { default as RemoveModal } from './RemoveModal';
 export { default as Loading } from './Loading';
 export { default as Notice } from './Notice';
-export { default as Notification } from './Notification';
+export { default as NotificationMessage } from './NotificationMessage';
+export { default as PermissionModal } from './PermissionModal';

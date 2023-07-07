@@ -1,7 +1,7 @@
 import { useState, useEffect, FC } from "react";
 import { requestForToken, onMessageListener } from "../app/firebase";
 
-const Notification: FC = () => {
+const NotificationMessage: FC = () => {
   const [notification, setNotification] = useState({ title: "", body: "" });
   useEffect(() => {
     if (notification?.title) {
@@ -20,4 +20,4 @@ const Notification: FC = () => {
   return <div />;
 };
 
-export default Notification;
+export default NotificationMessage;

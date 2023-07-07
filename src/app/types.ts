@@ -56,7 +56,7 @@ export interface TaskModalProps {
   action: any;
 }
 
-export interface RemoveModalProps {
+export interface ConfirmModalProps {
   action: any;
 }
 

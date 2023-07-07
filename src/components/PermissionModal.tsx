@@ -2,7 +2,7 @@ import { FC } from 'react';
 import siteData from '../app/util';
 import { ConfirmModalProps } from '../app/types';
 
-const RemoveModal: FC<ConfirmModalProps> = (props) => {
+const PermissionModal: FC<ConfirmModalProps> = (props) => {
   const { action } = props;
 
   const doProcess = (remove: boolean) => {
@@ -12,9 +12,9 @@ const RemoveModal: FC<ConfirmModalProps> = (props) => {
   return (
     <div className="modal">
       <div className="modal_content task">
-        <h3>{siteData.warning}</h3>
-        <p className="modal_message">{siteData.confirm}</p>
-        <button className="remove" onClick={() => doProcess(true)}>{siteData.remove}</button>
+        <h3>{siteData.permission}</h3>
+        <p className="modal_message">{siteData.push}</p>
+        <button className="ok" onClick={() => doProcess(true)}>{siteData.ok}</button>
         <button className="cancel" onClick={() => doProcess(false)}>{siteData.cancel}</button>
       </div>
       <div className="close" onClick={() => doProcess(false)}>
@@ -24,4 +24,4 @@ const RemoveModal: FC<ConfirmModalProps> = (props) => {
     </div>
   );
 };
-export default RemoveModal;
+export default PermissionModal;
