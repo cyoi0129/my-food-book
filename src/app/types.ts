@@ -73,3 +73,7 @@ export interface ChartProps {
   label: string[];
   data: HistoryType[];
 }
+
+export interface UpdateDialogProps {
+  registration: any;
+}

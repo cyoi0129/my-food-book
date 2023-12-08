@@ -164,6 +164,7 @@ const User: FC = () => {
       <button className="save" onClick={saveData}>{siteData.save}</button>
       <button className="remove" onClick={resetData}>{siteData.reset}</button>
       <button className="import" onClick={importData}>{siteData.import}</button>
+      <p className="version">App version 1.1</p>
       {showRemove? <RemoveModal action={resetProcess} /> : null}
       {loading ? <Loading /> : null}
       {notice ? <Notice /> : null}

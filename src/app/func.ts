@@ -3,8 +3,10 @@ import { FoodNutrientType, MasterType, TaskType } from './types';
 export const calc4day = (age: string, gender: 'male' | 'female', term: 'diet' | 'normal', height: string, weight: string) => {
   // 糖質 4kcal 脂質 9kcal タンパク質 4kcal
   const protein: number = Number(weight) * 2;
-  const sugar: number = term === 'diet' ? 50 : 160;
-  const calorie: number = gender === 'male' ? 13.397 * Number(weight) + 4.799 * Number(height) - 5.677 * Number(age) + 88.362 : 9.247 * Number(weight) + 3.098 * Number(height) - 4.33 * Number(age) + 447.593;
+  const sugar: number = Number(weight) * 4;
+  
+  const base: number = gender === 'male' ? 13.397 * Number(weight) + 4.799 * Number(height) - 5.677 * Number(age) + 88.362 : 9.247 * Number(weight) + 3.098 * Number(height) - 4.33 * Number(age) + 447.593;
+  const calorie = term === 'diet' ? base * 1.375 : base * 1.55;
   const fat: number = (calorie - protein * 4 - sugar * 4) / 9;
   return {
     protein: Math.floor(protein),

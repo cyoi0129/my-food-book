@@ -92,6 +92,8 @@ function registerValidSW(swUrl: string, config?: Config) {
                 config.onSuccess(registration);
               }
             }
+          } else if (installingWorker.state === "activated") {
+            window.location.reload();
           }
         };
       };

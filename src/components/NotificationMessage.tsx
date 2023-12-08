@@ -1,9 +1,10 @@
 import { useState, useEffect, FC } from "react";
-import { requestForToken, onMessageListener } from "../app/firebase";
+import { requestForToken, onMessageListener } from "../app/server";
 
 const NotificationMessage: FC = () => {
   const [notification, setNotification] = useState({ title: "", body: "" });
   useEffect(() => {
+    console.log(notification);
     if (notification?.title) {
       alert("title: " + notification?.title + "\nbody: " + notification?.body);
     }

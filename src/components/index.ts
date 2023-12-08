@@ -12,3 +12,4 @@ export { default as Loading } from './Loading';
 export { default as Notice } from './Notice';
 export { default as NotificationMessage } from './NotificationMessage';
 export { default as PermissionModal } from './PermissionModal';
+export { default as UpdateDialog } from './UpdateDialog';
