@@ -4,9 +4,12 @@ import { BrowserRouter } from "react-router-dom";
 import { UpdateDialog } from "./components";
 import App from "./App";
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import ReactGA from "react-ga4";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
+ReactGA.initialize("G-PRFEYQ3YQP");
+ReactGA.send("pageview");
 
 root.render(
   <BrowserRouter>
