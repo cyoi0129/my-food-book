@@ -1,66 +1,45 @@
-import { FC } from 'react';
-import { TaskItemProps } from '../app/types';
-import { float2Int } from '../app/func';
+'use client';
+
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../app/db';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCookie } from '@fortawesome/free-solid-svg-icons';
-import { faDroplet } from '@fortawesome/free-solid-svg-icons';
-import { faFire } from '@fortawesome/free-solid-svg-icons';
-import { faEgg } from '@fortawesome/free-solid-svg-icons';
-import { faPercentage } from '@fortawesome/free-solid-svg-icons';
+import { LuEgg, LuCookie, LuDroplet, LuFlame, LuPercent } from 'react-icons/lu';
+import { db } from '@/lib/db';
+import { float2Int } from '@/lib/nutrition';
+import type { TaskItemProps } from '@/types';
+import styles from './FoodItem.module.scss';
 
-const TaskItem: FC<TaskItemProps> = (props) => {
-  const { masterID, volume } = props;
-  const masterData = useLiveQuery(() => db.master.toArray());
+export default function TaskItem({ masterID, volume }: TaskItemProps) {
+  const master = useLiveQuery(() => db.master.get(masterID), [masterID]);
 
-  const targetData = () => {  // Find task data from masters
-    let result = {
-      name: '',
-      category: '',
-      protein: 0,
-      sugar: 0,
-      fat: 0,
-      calorie: 0,
-    };
-    const targetMaster = masterData?.find((master) => master.id === masterID);
-    if (targetMaster !== undefined) {
-      result.name = targetMaster.name;
-      result.category = targetMaster.category;
-      result.protein = (targetMaster.protein * volume) / 100;
-      result.sugar = (targetMaster.sugar * volume) / 100;
-      result.fat = (targetMaster.fat * volume) / 100;
-      result.calorie = (targetMaster.calorie * volume) / 100;
-    }
-    return result;
-  };
+  const scale = (value = 0) => float2Int((value * volume) / 100);
 
   return (
     <>
-      <h3 className="list_title"><span className="name">{targetData().name}</span><span className="category">{targetData().category}</span></h3>
-      <dl className="nutrient">
-        <dt>
-          <FontAwesomeIcon icon={faEgg} />
-        </dt>
-        <dd>{float2Int(targetData().protein)}</dd>
-        <dt>
-          <FontAwesomeIcon icon={faCookie} />
-        </dt>
-        <dd>{float2Int(targetData().sugar)}</dd>
-        <dt>
-          <FontAwesomeIcon icon={faDroplet} />
-        </dt>
-        <dd>{float2Int(targetData().fat)}</dd>
-        <dt>
-          <FontAwesomeIcon icon={faFire} />
-        </dt>
-        <dd>{float2Int(targetData().calorie)}</dd>
-        <dt>
-          <FontAwesomeIcon icon={faPercentage} />
-        </dt>
-        <dd>{volume}%</dd>
-      </dl>
+      <div className={styles.head}>
+        <span className={styles.name}>{master?.name ?? '-'}</span>
+        <span className={styles.category}>{master?.category ?? ''}</span>
+      </div>
+      <div className={styles.nutrient}>
+        <span className={`${styles.item} ${styles.protein}`}>
+          <LuEgg aria-hidden />
+          <b>{scale(master?.protein)}</b>
+        </span>
+        <span className={`${styles.item} ${styles.carbohydrate}`}>
+          <LuCookie aria-hidden />
+          <b>{scale(master?.carbohydrate)}</b>
+        </span>
+        <span className={`${styles.item} ${styles.fat}`}>
+          <LuDroplet aria-hidden />
+          <b>{scale(master?.fat)}</b>
+        </span>
+        <span className={`${styles.item} ${styles.calorie}`}>
+          <LuFlame aria-hidden />
+          <b>{scale(master?.calorie)}</b>
+        </span>
+        <span className={`${styles.item} ${styles.volume}`}>
+          <LuPercent aria-hidden />
+          <b>{volume}</b>
+        </span>
+      </div>
     </>
   );
-};
-export default TaskItem;
+}

@@ -1,130 +1,102 @@
-import { FC, useState, useEffect } from 'react';
-import siteData from '../app/util';
-import { float2Int } from '../app/func';
-import { MasterType, TaskModalProps, TaskType } from '../app/types';
+'use client';
 
-const TaskModal: FC<TaskModalProps> = (props) => {
-  const { task, masters, date, action } = props;
+import { useMemo, useState } from 'react';
+import Modal from './Modal';
+import siteData from '@/lib/text';
+import { float2Int, getFoodNutrient } from '@/lib/nutrition';
+import type { TaskModalProps, TaskType } from '@/types';
+import styles from './ModalForm.module.scss';
 
-  // State
-  const [master, setMaster] = useState<number>(1);
-  const [masterList, setMasterList] = useState<MasterType[]>([]);
-  const [volume, setVolume] = useState<number>(100);
-  const [protein, setProtein] = useState<number>(0);
-  const [sugar, setSugar] = useState<number>(0);
-  const [fat, setFat] = useState<number>(0);
-  const [calorie, setCalorie] = useState<number>(0);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [filter, setFilter] = useState<string | 'すべて'>('すべて');
+const ALL = 'すべて';
+const VOLUMES = Array.from({ length: 31 }, (_, i) => i * 10); // 0〜300% を 10 刻み
 
-  // Watch Method
-  const changeMaster = (master: number) => {
-    setMaster(master);
-  };
+export default function TaskModal({ task, masters, date, action, onRemove }: TaskModalProps) {
+  const [filter, setFilter] = useState<string>(ALL);
+  const [masterID, setMasterID] = useState<number>(task?.masterID ?? masters[0]?.id ?? 1);
+  const [volume, setVolume] = useState<number>(task?.volume ?? 100);
 
-  const changeVolume = (volume: number) => {
-    setVolume(volume);
-  };
+  const categories = useMemo(() => [ALL, ...Array.from(new Set(masters.map((m) => m.category)))], [masters]);
 
-  const closeModal = () => {
-    action(); // Send to Parent Component
-  };
+  const masterList = useMemo(
+    () => (filter === ALL ? masters : masters.filter((m) => m.category === filter)),
+    [masters, filter]
+  );
+
+  const nutrient = useMemo(
+    () => getFoodNutrient({ masterID, volume, date, id: task?.id }, masters),
+    [masterID, volume, date, task?.id, masters]
+  );
 
   const saveTask = () => {
-    const taskItem: TaskType = {
-      id: task?.id,
-      date: date,
-      masterID: Number(master),
-      volume: volume,
-    };
-    action(taskItem); // Send to Parent Component
+    const item: TaskType = { id: task?.id, date, masterID: Number(masterID), volume };
+    action(item);
   };
 
-  // Calc Nutrient when master or volume changed
-  useEffect(() => {
-    const targetMaster = masters.find((target) => target.id === master);
-    if (targetMaster === undefined) return;
-    setProtein((targetMaster.protein * volume) / 100);
-    setSugar((targetMaster.sugar * volume) / 100);
-    setFat((targetMaster.fat * volume) / 100);
-    setCalorie((targetMaster.calorie * volume) / 100);
-  }, [master, volume]);
-
-  useEffect(() => {
-    if (filter!=='すべて') {
-      setMasterList(masters.filter(master => master.category === filter));
-    } else {
-      setMasterList(masters);
-    }
-  }, [filter]);
-
-  // Init
-  useEffect(() => {
-    masters.map((master) => master.category);
-    let categoryList: string[] = Array.from(new Set(masters.map((master) => master.category)));
-    categoryList.unshift('すべて');
-    setCategories(categoryList);
-    setMasterList(masters);
-    if (task===undefined) return;
-    setMaster(task.masterID);
-    setVolume(task.volume);
-  }, []);
-
   return (
-    <div className="modal">
-      <div className="modal_content task">
-        <h3>{siteData.task}</h3>
-        <dl>
-        <dt>{siteData.category}</dt>
-          <dd>
-            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-              {categories.length > 0
-                ? categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))
-                : null}
-            </select>
-          </dd>
-          <dt>{siteData.name}</dt>
-          <dd>
-            <select value={master} onChange={(e) => changeMaster(Number(e.target.value))}>
-              {masterList.length > 0
-                ? masterList.map((master) => (
-                    <option key={master.id} value={master.id}>
-                      {master.name}
-                    </option>
-                  ))
-                : null}
-            </select>
-          </dd>
-          <dt>{siteData.volume}</dt>
-          <dd>
-            <select value={volume} onChange={(e) => changeVolume(Number(e.target.value))}>
-              {[...Array(31)].map((_, i) => ( // Create Array from 10 to 300, Step 10
-                <option key={i} value={(i) * 10}>
-                  {(i) * 10}%
-                </option>
-              ))}
-            </select>
-          </dd>
-          <dt>{siteData.protein}</dt>
-          <dd>{float2Int(protein)}</dd>
-          <dt>{siteData.sugar}</dt>
-          <dd>{float2Int(sugar)}</dd>
-          <dt>{siteData.fat}</dt>
-          <dd>{float2Int(fat)}</dd>
-          <dt>{siteData.calorie}</dt>
-          <dd>{float2Int(calorie)}</dd>
-        </dl>
-        <button className="save" onClick={saveTask}>{siteData.save}</button>
+    <Modal title={siteData.task} onClose={() => action()}>
+      <div className={styles.form}>
+        <div className={styles.field}>
+          <label className={styles.label}>{siteData.category}</label>
+          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>{siteData.name}</label>
+          <select value={masterID} onChange={(e) => setMasterID(Number(e.target.value))}>
+            {masterList.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>{siteData.volume}</label>
+          <select value={volume} onChange={(e) => setVolume(Number(e.target.value))}>
+            {VOLUMES.map((v) => (
+              <option key={v} value={v}>
+                {v}%
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.preview}>
+          <div className={styles.cell}>
+            <span className={styles.key}>{siteData.protein}</span>
+            <span className={styles.value}>{float2Int(nutrient.protein)}</span>
+          </div>
+          <div className={styles.cell}>
+            <span className={styles.key}>{siteData.carbohydrate}</span>
+            <span className={styles.value}>{float2Int(nutrient.carbohydrate)}</span>
+          </div>
+          <div className={styles.cell}>
+            <span className={styles.key}>{siteData.fat}</span>
+            <span className={styles.value}>{float2Int(nutrient.fat)}</span>
+          </div>
+          <div className={styles.cell}>
+            <span className={styles.key}>{siteData.calorie}</span>
+            <span className={styles.value}>{float2Int(nutrient.calorie)}</span>
+          </div>
+        </div>
+
+        <button type="button" className={styles.save} onClick={saveTask}>
+          {siteData.save}
+        </button>
+
+        {task?.id !== undefined && onRemove && (
+          <button type="button" className={styles.remove} onClick={onRemove}>
+            {siteData.remove}
+          </button>
+        )}
       </div>
-      <div className="close" onClick={closeModal}>
-        <span className="close_icon"></span>
-      </div>
-      <div className="overlay"></div>
-    </div>
+    </Modal>
   );
-};
-export default TaskModal;
+}

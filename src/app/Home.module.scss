@@ -1,0 +1,55 @@
+@use 'styles/mixins' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.term {
+  @include card;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+}
+
+.field {
+  flex: 1;
+
+  input {
+    @include field;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+
+    // カレンダーピッカーの起動領域を入力欄全体に広げる（右端アイコンだけでなく全面をクリック可能に）。
+    &::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset: 0;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+}
+
+.tilde {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.card {
+  @include card;
+  padding: 16px 12px 12px;
+}
+
+.heading {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text);
+  padding: 0 4px 10px;
+}

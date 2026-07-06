@@ -1,42 +1,41 @@
-import { FC, useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import siteData from '../app/util';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine } from '@fortawesome/free-solid-svg-icons';
-import { faBurger } from '@fortawesome/free-solid-svg-icons';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+'use client';
 
-const Footer: FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [current, setCurrent] = useState<string>('');
-  useEffect(()=> {setCurrent(location.pathname)},[location]);
-  const changeScreen = (target: string) => {
-    navigate(target);
-  }
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { LuChartLine, LuCalendarDays, LuBeef, LuUser } from 'react-icons/lu';
+import type { IconType } from 'react-icons';
+import siteData from '@/lib/text';
+import styles from './Footer.module.scss';
+
+const tabs: { href: string; label: string; Icon: IconType }[] = [
+  { href: '/', label: siteData.summary, Icon: LuChartLine },
+  { href: '/task', label: siteData.task, Icon: LuCalendarDays },
+  { href: '/master', label: siteData.master, Icon: LuBeef },
+  { href: '/user', label: siteData.user, Icon: LuUser },
+];
+
+export default function Footer() {
+  const pathname = usePathname();
 
   return (
-    <footer>
-      <ul>
-        <li onClick={() => changeScreen('/')} className={current==='/'? 'active': ''}>
-          <FontAwesomeIcon icon={faChartLine} />
-          <span>{siteData.summary}</span>
-        </li>
-        <li onClick={() => changeScreen('/task')} className={current==='/task'? 'active': ''}>
-          <FontAwesomeIcon icon={faCalendar} />
-          <span>{siteData.task}</span>
-        </li>
-        <li onClick={() => changeScreen('/master')} className={current==='/master'? 'active': ''}>
-          <FontAwesomeIcon icon={faBurger} />
-          <span>{siteData.master}</span>
-        </li>
-        <li onClick={() => changeScreen('/user')} className={current==='/user'? 'active': ''}>
-          <FontAwesomeIcon icon={faUser} />
-          <span>{siteData.user}</span>
-        </li>
+    <footer className={styles.footer}>
+      <ul className={styles.tabs}>
+        {tabs.map(({ href, label, Icon }) => {
+          const active = pathname === href;
+          return (
+            <li key={href}>
+              <Link
+                href={href}
+                className={active ? `${styles.tab} ${styles.active}` : styles.tab}
+                aria-current={active ? 'page' : undefined}
+              >
+                <Icon aria-hidden />
+                <span>{label}</span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </footer>
   );
-};
-export default Footer;
+}

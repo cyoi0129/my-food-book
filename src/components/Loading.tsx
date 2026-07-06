@@ -1,13 +1,9 @@
-import { FC } from 'react';
+import styles from './Loading.module.scss';
 
-const Loading: FC = () => {
+export default function Loading() {
   return (
-    <div className="modal">
-      <div className="loading">
-        <div className="loader">Loading...</div>
-      </div>
-      <div className="overlay"></div>
+    <div className={styles.overlay} role="status" aria-live="polite" aria-label="Loading">
+      <span className={styles.spinner} />
     </div>
   );
-};
-export default Loading;
+}

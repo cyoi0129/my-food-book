@@ -1,13 +1,14 @@
-import { FC } from 'react';
-import siteData from '../app/util';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { LuUtensils } from 'react-icons/lu';
+import siteData from '@/lib/text';
+import styles from './Header.module.scss';
 
-const Header: FC = () => {
+export default function Header() {
   return (
-    <header>
-      <h1><FontAwesomeIcon icon={faUtensils} />{siteData.siteName}</h1>
+    <header className={styles.header}>
+      <h1 className={styles.title}>
+        <LuUtensils aria-hidden />
+        <span>{siteData.siteName}</span>
+      </h1>
     </header>
-  )
+  );
 }
-export default Header;

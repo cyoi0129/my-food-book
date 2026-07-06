@@ -1,13 +1,20 @@
-import { FC } from 'react';
-import siteData from '../app/util';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { LuCircleCheck, LuCircleAlert } from 'react-icons/lu';
+import siteData from '@/lib/text';
+import styles from './Notice.module.scss';
 
-const Notice: FC = () => {
+interface NoticeProps {
+  message?: string;
+  type?: 'success' | 'error';
+}
+
+export default function Notice({ message, type = 'success' }: NoticeProps) {
+  const text = message ?? (type === 'error' ? siteData.warning : siteData.notice);
+  const className = type === 'error' ? `${styles.notice} ${styles.error}` : styles.notice;
+
   return (
-    <div className="notice">
-      <p><span><FontAwesomeIcon icon={faCircleCheck} /></span>{siteData.notice}</p>
+    <div className={className} role="status" aria-live="polite">
+      {type === 'error' ? <LuCircleAlert aria-hidden /> : <LuCircleCheck aria-hidden />}
+      <span>{text}</span>
     </div>
   );
-};
-export default Notice;
+}

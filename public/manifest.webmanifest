@@ -1,0 +1,35 @@
+{
+  "name": "My Food Book",
+  "short_name": "Food Book",
+  "description": "食事・栄養素・体重を記録するクライアント完結型アプリ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#efefef",
+  "theme_color": "#89c997",
+  "icons": [
+    {
+      "src": "/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo192_clear.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/logo512_clear.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

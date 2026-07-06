@@ -1,27 +1,22 @@
-import { FC } from 'react';
-import siteData from '../app/util';
-import { ConfirmModalProps } from '../app/types';
+'use client';
 
-const RemoveModal: FC<ConfirmModalProps> = (props) => {
-  const { action } = props;
+import Modal from './Modal';
+import siteData from '@/lib/text';
+import type { ConfirmModalProps } from '@/types';
+import styles from './RemoveModal.module.scss';
 
-  const doProcess = (remove: boolean) => {
-    action(remove);
-  };
-
+export default function RemoveModal({ action }: ConfirmModalProps) {
   return (
-    <div className="modal">
-      <div className="modal_content task">
-        <h3>{siteData.warning}</h3>
-        <p className="modal_message">{siteData.confirm}</p>
-        <button className="remove" onClick={() => doProcess(true)}>{siteData.remove}</button>
-        <button className="cancel" onClick={() => doProcess(false)}>{siteData.cancel}</button>
+    <Modal title={siteData.warning} onClose={() => action(false)}>
+      <p className={styles.message}>{siteData.confirm}</p>
+      <div className={styles.actions}>
+        <button type="button" className={styles.remove} onClick={() => action(true)}>
+          {siteData.remove}
+        </button>
+        <button type="button" className={styles.cancel} onClick={() => action(false)}>
+          {siteData.cancel}
+        </button>
       </div>
-      <div className="close" onClick={() => doProcess(false)}>
-        <span className="close_icon"></span>
-      </div>
-      <div className="overlay"></div>
-    </div>
+    </Modal>
   );
-};
-export default RemoveModal;
+}

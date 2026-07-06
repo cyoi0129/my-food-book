@@ -1,0 +1,111 @@
+// 共有ミックスイン。各 *.module.scss から `@use 'styles/mixins' as *;` で参照する。
+// （next.config.mjs の sassOptions.includePaths に src を追加済み）
+
+@mixin card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+@mixin button($bg: var(--color-primary), $fg: #fff) {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: var(--radius);
+  background: $bg;
+  color: $fg;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    filter 0.15s var(--ease),
+    transform 0.08s var(--ease);
+
+  &:hover {
+    filter: brightness(1.05);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-dark);
+    outline-offset: 2px;
+  }
+}
+
+@mixin field {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 16px; // iOS のズーム防止に 16px 以上
+  transition:
+    border-color 0.15s var(--ease),
+    box-shadow 0.15s var(--ease);
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
+}
+
+// ラベル(dt)と値(dd)を並べる情報リスト。Task / User / モーダルで共用。
+@mixin info-list {
+  @include card;
+  padding: 4px 18px;
+
+  dt {
+    padding: 13px 0 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+  dd {
+    padding-bottom: 13px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 16px;
+    color: var(--color-text);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+@mixin fab {
+  position: fixed;
+  right: max(16px, calc(50% - var(--max-w) / 2 + 16px));
+  bottom: calc(var(--footer-h) + 16px);
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  z-index: 20;
+  transition:
+    filter 0.15s var(--ease),
+    transform 0.1s var(--ease);
+
+  &:hover {
+    filter: brightness(1.05);
+  }
+  &:active {
+    transform: scale(0.94);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-dark);
+    outline-offset: 3px;
+  }
+}

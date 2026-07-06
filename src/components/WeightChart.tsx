@@ -1,49 +1,48 @@
-import { FC } from 'react';
-import siteData from '../app/util';
-import { Chart as ChartJS, LinearScale, CategoryScale, BarElement, PointElement, LineElement, Legend, Tooltip, LineController, BarController } from 'chart.js';
-import { Chart } from 'react-chartjs-2';
-import { ChartProps } from '../app/types';
+'use client';
 
-ChartJS.register(LinearScale, CategoryScale, BarElement, PointElement, LineElement, Legend, Tooltip, LineController, BarController);
-const WeightChart: FC<ChartProps> = (props) => {
-  const { label, data } = props;
-  const labels = label;
+import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import siteData from '@/lib/text';
+import { float2Int } from '@/lib/nutrition';
+import type { ChartProps } from '@/types';
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: siteData.weight,
-      },
-    },
-  };
-
-  const graphData = {
-    labels,
-    datasets: [
-      {
-        type: 'line' as const,
-        label: siteData.weight,
-        borderColor: 'rgb(255, 99, 132)',
-        borderWidth: 2,
-        fill: false,
-        data: data.map((item) => item.weight),
-      },
-      {
-        type: 'bar' as const,
-        label: siteData.calorie,
-        backgroundColor: 'rgb(75, 192, 192)',
-        data: data.map((item) => item.calorie),
-        borderColor: 'white',
-        borderWidth: 2,
-      },
-    ],
-  };
-  return <Chart options={options} type="bar" height={300} data={graphData} />;
+// ラベル(YYYY-MM-DD) を M/D に短縮して x 軸に使う。
+const shortDate = (iso: string): string => {
+  const [, m, d] = iso.split('-');
+  return m && d ? `${Number(m)}/${Number(d)}` : iso;
 };
 
-export default WeightChart;
+export default function WeightChart({ label, data }: ChartProps) {
+  const chartData = label.map((iso, i) => ({
+    date: shortDate(iso),
+    weight: float2Int(data[i]?.weight),
+    calorie: float2Int(data[i]?.calorie),
+  }));
+
+  return (
+    <ResponsiveContainer width="100%" height={260}>
+      <ComposedChart data={chartData} margin={{ top: 8, right: 8, bottom: 0, left: -18 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+        <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} />
+        <YAxis tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }} />
+        <Tooltip
+          contentStyle={{
+            background: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
+            borderRadius: 8,
+            fontSize: 12,
+          }}
+        />
+        <Legend wrapperStyle={{ fontSize: 12 }} />
+        <Bar dataKey="calorie" name={siteData.calorie} fill="var(--color-calorie)" radius={[4, 4, 0, 0]} maxBarSize={28} />
+        <Line
+          type="monotone"
+          dataKey="weight"
+          name={siteData.weight}
+          stroke="var(--color-weight)"
+          strokeWidth={2}
+          dot={{ r: 3 }}
+        />
+      </ComposedChart>
+    </ResponsiveContainer>
+  );
+}

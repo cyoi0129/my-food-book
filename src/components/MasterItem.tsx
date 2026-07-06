@@ -1,35 +1,32 @@
-import { FC } from 'react';
-import { MasterItemProps } from '../app/types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCookie } from '@fortawesome/free-solid-svg-icons';
-import { faDroplet } from '@fortawesome/free-solid-svg-icons';
-import { faFire } from '@fortawesome/free-solid-svg-icons';
-import { faEgg } from '@fortawesome/free-solid-svg-icons';
+import { LuEgg, LuCookie, LuDroplet, LuFlame } from 'react-icons/lu';
+import type { MasterItemProps } from '@/types';
+import styles from './FoodItem.module.scss';
 
-const MasterItem: FC<MasterItemProps> = (props) => {
-  const { master } = props;
+export default function MasterItem({ master }: MasterItemProps) {
   return (
     <>
-      <h2 className="list_title"><span className="name">{master.name}</span><span className="category">{master.category}</span></h2>
-      <dl className="nutrient">
-        <dt>
-          <FontAwesomeIcon icon={faEgg} />
-        </dt>
-        <dd>{master.protein}</dd>
-        <dt>
-          <FontAwesomeIcon icon={faCookie} />
-        </dt>
-        <dd>{master.sugar}</dd>
-        <dt>
-          <FontAwesomeIcon icon={faDroplet} />
-        </dt>
-        <dd>{master.fat}</dd>
-        <dt>
-          <FontAwesomeIcon icon={faFire} />
-        </dt>
-        <dd>{master.calorie}</dd>
-      </dl>
+      <div className={styles.head}>
+        <span className={styles.name}>{master.name}</span>
+        <span className={styles.category}>{master.category}</span>
+      </div>
+      <div className={styles.nutrient}>
+        <span className={`${styles.item} ${styles.protein}`}>
+          <LuEgg aria-hidden />
+          <b>{master.protein}</b>
+        </span>
+        <span className={`${styles.item} ${styles.carbohydrate}`}>
+          <LuCookie aria-hidden />
+          <b>{master.carbohydrate}</b>
+        </span>
+        <span className={`${styles.item} ${styles.fat}`}>
+          <LuDroplet aria-hidden />
+          <b>{master.fat}</b>
+        </span>
+        <span className={`${styles.item} ${styles.calorie}`}>
+          <LuFlame aria-hidden />
+          <b>{master.calorie}</b>
+        </span>
+      </div>
     </>
   );
-};
-export default MasterItem;
+}

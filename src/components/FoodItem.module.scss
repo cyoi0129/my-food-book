@@ -1,0 +1,67 @@
+// TaskItem / MasterItem 共用のカード内レイアウト。
+// （li の枠・影は各ページの food_list 側で付与する）
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  background: color-mix(in srgb, var(--color-primary) 18%, transparent);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.nutrient {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--color-text-muted);
+
+    svg {
+      font-size: 14px;
+    }
+    b {
+      font-weight: 700;
+      color: var(--color-text);
+    }
+  }
+
+  .protein svg {
+    color: var(--color-protein);
+  }
+  .carbohydrate svg {
+    color: var(--color-carbohydrate);
+  }
+  .fat svg {
+    color: var(--color-fat);
+  }
+  .calorie svg {
+    color: var(--color-calorie);
+  }
+  .volume svg {
+    color: var(--color-text-muted);
+  }
+}
