@@ -19,7 +19,9 @@
 
   input {
     @include field;
-    width: 100%;
+    max-width: calc(100% - 20px);
+    min-width: 0;
+    box-sizing: border-box;
     position: relative;
     cursor: pointer;
 
